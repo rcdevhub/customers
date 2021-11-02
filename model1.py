@@ -17,9 +17,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import time
 import copy
+import pickle
 from datetime import datetime
 from datetime import timedelta
 import xgboost as xgb
+import shap
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.feature_selection import SelectKBest
@@ -32,7 +34,7 @@ from sklearn.metrics import mean_squared_error
 # Set working directory
 os.chdir('C://Code/Kaggle/customers')
 
-'''----------------------Data prep functions------------------------''' 
+'''----------------------Data prep functions------------------------'''
 
 def get_val_counts(data,variables):
     '''Return dict containing value counts.'''
@@ -54,6 +56,22 @@ def add_one_hot(data,variables):
                           axis=1)
         
     return data
+
+'''----------------------Plotting functions------------------------'''
+
+def plot_shap_feature_imp(feature_names,shap_values):
+    '''Plot mean absolute SHAP contribution of each feature.'''
+    aggregate = np.mean(np.abs(shap_values[:,0:-1]),axis=0)
+    # Sort by magnitude
+    z = [(x,y) for y,x in sorted(zip(aggregate,feature_names), reverse=True)]
+    z = list(zip(*z))
+    plt.figure()
+    plt.bar(z[0],z[1])
+    plt.xticks(rotation=90)
+    plt.tight_layout()
+    plt.show()
+    
+    return None
     
 '''----------------------Import data----------------------------------''' 
 
@@ -223,3 +241,35 @@ ax1.set_ylim([0,300])
 plt.title('Predicted vs Actual density')
 plt.xlabel('Actual')
 plt.ylabel('Predicted')
+
+'''----------------------SHAP feature importance---------------------'''
+
+# Necessary to use base XGBoost
+# Set GPU parameters
+params2 = reg2.get_xgb_params()
+params2['tree_method'] = 'gpu_hist'
+params2['predictor'] = 'gpu_predictor'
+params2['gpu_id'] = 0
+# Fit model using GPU
+reg3 = xgb.train(params=params2,dtrain = matrix, num_boost_round=best_num_trees)
+# Calculate SHAP values
+shap_values = reg3.predict(matrix,pred_contribs=True)
+# Plot
+shap.summary_plot(shap_values[:,:-1],X_train_norm)
+# Calculate interactions
+shap_interactions = reg3.predict(matrix,pred_interactions=True)
+# Plot
+shap.summary_plot(shap_interactions[:,:-1,:-1],X_train_norm)
+# Plot mean absolute contribution
+plot_shap_feature_imp(model_vars, shap_values)
+
+'''----------------------Save models---------------------'''
+
+pickle.dump(scaler,open('std_scaler.sav','wb'))
+pickle.dump(reg2,open('reg_model.sav','wb'))
+
+'''----------------------Test models---------------------'''
+
+test_record = np.array([[1955,80395,0,0,62,1,6,5,12,2,685]])
+test_record_std = scaler.transform(test_record)
+preds_test_rec = reg2.predict(test_record_std)
