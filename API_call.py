@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-API request to model
+API request to local model
 
 Created on Tue Nov  2 17:09:37 2021
 

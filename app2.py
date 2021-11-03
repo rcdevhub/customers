@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Model deployment using FastAPI
+Model deployment to Heroku cloud using FastAPI
 
 Created on Tue Nov  2 14:54:54 2021
 
