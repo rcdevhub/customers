@@ -78,5 +78,5 @@ def get_spend(data: Customer):
     
     return {"prediction": prediction}
 
-# Deploy API locally
-uvicorn.run(app,host='127.0.0.1',port=4000,debug=True)
+# Deploy API
+uvicorn.run("app1:app",host='127.0.0.1',port=4000,debug=True)
