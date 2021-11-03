@@ -7,8 +7,6 @@ Created on Tue Nov  2 14:54:54 2021
 @author: rcpc4
 """
 
-# Run this script from the command line to deploy API locally
-
 import numpy as np
 import pickle
 
@@ -77,6 +75,3 @@ def get_spend(data: Customer):
     prediction = float(model.predict(record_std))
     
     return {"prediction": prediction}
-
-# Deploy API
-uvicorn.run(app,host='127.0.0.1',port=4000,debug=True)
