@@ -4,6 +4,7 @@ This repo contains a demo of a machine learning model accessed by API, hosted ei
 The cloud API is deployed at <a href="https://customerspendapidemo.herokuapp.com/docs/" target="_blank">https://customerspendapidemo.herokuapp.com/docs/</a>
 
 It is possible to pass an example data record to the model and receive the predicted spend of the customer.
+
 Example API calls are contained in `API_call.py` and `API_call_global.py`
 
 The model deployment scipts use FastAPI and are `app1.py` (local) and `app2.py` (global).
