@@ -7,5 +7,5 @@ It is possible to pass an example data record to the model and receive the predi
 
 Example API calls are contained in `API_call.py` and `API_call_global.py`
 
-Model deployments using Fast API are contained in `app1.py` (local) and `app2.py` (global).
+Model deployments using FastAPI are contained in `app1.py` (local) and `app2.py` (global).
 The code to fit the XGBoost model is contained in `model1.py` We used the <a href="https://www.kaggle.com/imakash3011/customer-personality-analysis" target="_blank">Customer Personality Analysis</a> dataset. The records represent various information about customers, such as their birth year, income and number of children.
